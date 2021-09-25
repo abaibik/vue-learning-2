@@ -14,4 +14,17 @@ describe("ExpenceList.vue", () => {
     expect(row.props().index).toBe(1);
     expect(row.props().item).toBe(item);
   });
+
+  it("renders multiple items", () => {
+    const wrapper = shallowMount(ExpenceList, {
+      propsData: {
+        items: [
+          { date: new Date(), category: "cats", value: 40 },
+          { date: new Date(), category: "cats", value: 40 },
+        ],
+      },
+    });
+    const rows = wrapper.findAllComponents(ExpenceListRow);
+    expect(rows.length).toBe(2);
+  });
 });
