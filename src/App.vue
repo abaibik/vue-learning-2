@@ -1,23 +1,19 @@
 <template>
   <div class="container">
     <h1 class="mb-5">Expence list</h1>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Date</th>
-          <th scope="col">Category</th>
-          <th scope="col">Value</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <ExpenceList :items="itemsStorage.getExpences()" />
   </div>
 </template>
 
 <script>
+import ExpenceList from "./components/ExpenceList.vue";
+import ExpenceStorage from "./expence-storage.js";
+
 export default {
   name: "App",
-  components: {},
+  components: { ExpenceList },
+  data: function () {
+    return { itemsStorage: new ExpenceStorage() };
+  },
 };
 </script>
