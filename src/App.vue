@@ -1,6 +1,13 @@
 <template>
   <div class="container">
-    <h1 class="mb-5">Expence list</h1>
+    <h1 class="mb-5"><ins>Expence list</ins></h1>
+    <button
+      type="button"
+      class="btn btn-outline-secondary mb-5"
+      @click="dialogShown = true"
+    >
+      Add new cost
+    </button>
     <ExpenceList :items="itemsStorage.getExpences()" />
   </div>
 </template>
@@ -13,7 +20,7 @@ export default {
   name: "App",
   components: { ExpenceList },
   data: function () {
-    return { itemsStorage: new ExpenceStorage() };
+    return { itemsStorage: new ExpenceStorage(), dialogShown: false };
   },
 };
 </script>

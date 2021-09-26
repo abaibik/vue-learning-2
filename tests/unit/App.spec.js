@@ -19,4 +19,12 @@ describe("App.vue", () => {
     const list = wrapper.findComponent(ExpenceList);
     expect(list.props().items).toStrictEqual([item]);
   });
+
+  it("dialog shown when button clicked", async () => {
+    const wrapper = shallowMount(App);
+    const btn = wrapper.find("button");
+    await btn.trigger("click");
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.dialogShown).toBeTruthy();
+  });
 });
