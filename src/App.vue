@@ -8,17 +8,19 @@
     >
       Add new cost
     </button>
+    <AddDialog v-model="dialogShown" />
     <ExpenceList :items="itemsStorage.getExpences()" />
   </div>
 </template>
 
 <script>
+import AddDialog from "./components/AddDialog.vue";
 import ExpenceList from "./components/ExpenceList.vue";
 import ExpenceStorage from "./expence-storage.js";
 
 export default {
   name: "App",
-  components: { ExpenceList },
+  components: { ExpenceList, AddDialog },
   data: function () {
     return { itemsStorage: new ExpenceStorage(), dialogShown: false };
   },
