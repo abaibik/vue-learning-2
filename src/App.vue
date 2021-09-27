@@ -8,7 +8,7 @@
     >
       Add new cost
     </button>
-    <AddDialog v-model="dialogShown" />
+    <AddDialog v-model="dialogShown" @addCost="itemsStorage.add($event)" />
     <ExpenceList :items="itemsStorage.getExpences()" />
   </div>
 </template>
