@@ -17,17 +17,32 @@
               <label for="paymentCategory" class="form-label"
                 >Payment category</label
               >
-              <input type="text" class="form-control" id="paymentCategory" />
+              <input
+                type="text"
+                class="form-control"
+                id="paymentCategory"
+                ref="categoryRef"
+              />
             </div>
             <div class="mb-3">
               <label for="paymentAmount" class="form-label"
                 >Payment amount</label
               >
-              <input type="text" class="form-control" id="paymentAmount" />
+              <input
+                type="text"
+                class="form-control"
+                id="paymentAmount"
+                ref="amountRef"
+              />
             </div>
             <div class="mb-3">
               <label for="paymentDate" class="form-label">Payment date</label>
-              <input type="date" class="form-control" id="paymentDate" />
+              <input
+                type="date"
+                class="form-control"
+                id="paymentDate"
+                ref="dateRef"
+              />
             </div>
           </form>
         </div>
@@ -39,7 +54,13 @@
           >
             Close
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            id="buttonAdd"
+            @click="$emit('addCost', makeCost())"
+          >
             Add
           </button>
         </div>
@@ -56,6 +77,7 @@ export default {
   props: {
     visible: Boolean,
   },
+  emits: ["addCost"],
   model: {
     prop: "visible",
     event: "visibleChange",
@@ -68,6 +90,18 @@ export default {
       } else {
         myModal.hide();
       }
+    },
+  },
+  methods: {
+    makeCost: function () {
+      const category = this.$refs.categoryRef.value;
+      const amount = this.$refs.amountRef.value;
+      const date = this.$refs.dateRef.value;
+      return {
+        date: new Date(date),
+        category: category,
+        value: amount,
+      };
     },
   },
   mounted() {
