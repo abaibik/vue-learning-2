@@ -6,4 +6,8 @@ export default class ExpenceStorage {
   getExpences() {
     return this.items;
   }
+
+  add(cost) {
+    this.items.push(cost);
+  }
 }

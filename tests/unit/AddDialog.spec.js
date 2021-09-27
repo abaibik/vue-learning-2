@@ -9,7 +9,7 @@ describe("AddDialog.vue", () => {
       },
     });
     const mockCallback = jest.fn();
-    wrapper.vm.$refs.dialogRef.addEventListener("shown.bs.modal", mockCallback);
+    wrapper.vm.$refs.dialogRef.addEventListener("show.bs.modal", mockCallback);
     await wrapper.setProps({ visible: true });
     expect(mockCallback.mock.calls.length).toBe(1);
   });

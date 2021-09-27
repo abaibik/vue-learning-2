@@ -39,7 +39,9 @@
           >
             Close
           </button>
-          <button type="button" class="btn btn-primary">Add</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            Add
+          </button>
         </div>
       </div>
     </div>
