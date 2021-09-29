@@ -103,6 +103,11 @@ export default {
         value: amount,
       };
     },
+    clearForm: function () {
+      this.$refs.categoryRef.value = "";
+      this.$refs.amountRef.value = "";
+      this.$refs.dateRef.value = "";
+    },
   },
   mounted() {
     this.$refs.dialogRef.addEventListener("shown.bs.modal", () => {
@@ -110,6 +115,7 @@ export default {
     });
     this.$refs.dialogRef.addEventListener("hidden.bs.modal", () => {
       this.$emit("visibleChange", false);
+      this.clearForm();
     });
   },
 };

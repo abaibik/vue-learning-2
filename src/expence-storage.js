@@ -1,6 +1,17 @@
 export default class ExpenceStorage {
   constructor() {
-    this.items = [];
+    const loadedItems = localStorage.getItem("expences");
+    if (loadedItems === null) {
+      this.items = [];
+    } else {
+      this.items = JSON.parse(loadedItems).map((item) => {
+        return {
+          date: new Date(item.date),
+          category: item.category,
+          value: item.value,
+        };
+      });
+    }
   }
 
   getExpences() {
@@ -9,5 +20,6 @@ export default class ExpenceStorage {
 
   add(cost) {
     this.items.push(cost);
+    localStorage.setItem("expences", JSON.stringify(this.items));
   }
 }
