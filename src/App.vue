@@ -36,7 +36,7 @@ export default {
   components: { ExpenceList, AddDialog, Pagination },
   data: function () {
     return {
-      itemsStorage: new ExpenceStorage(),
+      itemsStorage: new ExpenceStorage(localStorage),
       dialogShown: false,
       itemsPerPage: 5,
       currentPage: 0,
