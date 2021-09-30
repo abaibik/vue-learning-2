@@ -49,15 +49,15 @@ export default {
   computed: {
     previousClassName: function () {
       if (this.currentPage === 0) {
-        return "page-item disabled";
+        return "previous-button page-item disabled";
       }
-      return "page-item";
+      return "previous-button page-item";
     },
     nextClassName: function () {
       if (this.currentPage === this.pageCount - 1) {
-        return "page-item disabled";
+        return "next-button page-item disabled";
       }
-      return "page-item";
+      return "next-button page-item";
     },
   },
 };
