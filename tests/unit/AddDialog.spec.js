@@ -14,7 +14,7 @@ describe("AddDialog.vue", () => {
     expect(mockCallback.mock.calls.length).toBe(1);
   });
 
-  it("makeCost returns values from inputs", async () => {
+  it("makeCost returns values from inputs", () => {
     const wrapper = shallowMount(AddDialog);
     wrapper.vm.$refs.categoryRef.value = "cats";
     wrapper.vm.$refs.amountRef.value = "40";
@@ -48,5 +48,16 @@ describe("AddDialog.vue", () => {
         value: "40",
       },
     ]);
+  });
+
+  it("clearForm clear inputs", () => {
+    const wrapper = shallowMount(AddDialog);
+    wrapper.vm.$refs.categoryRef.value = "cats";
+    wrapper.vm.$refs.amountRef.value = "40";
+    wrapper.vm.$refs.dateRef.value = "2017-06-01";
+    wrapper.vm.clearForm();
+    expect(wrapper.vm.$refs.categoryRef.value).toBe("");
+    expect(wrapper.vm.$refs.amountRef.value).toBe("");
+    expect(wrapper.vm.$refs.dateRef.value).toBe("");
   });
 });
