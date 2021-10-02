@@ -14,7 +14,7 @@ export const mutations = {
   },
 
   setCurrentPage: (state, pageNumber) => {
-    if (pageNumber < 0) {
+    if (pageNumber < 0 || pageNumber > getters.pageCount(state) - 1) {
       return;
     }
     state.currentPage = pageNumber;

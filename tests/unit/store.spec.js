@@ -17,14 +17,20 @@ describe("Store", () => {
   });
 
   it("setCurrentPage", () => {
-    const state = { currentPage: 1 };
-    setCurrentPage(state, 2);
-    expect(state.currentPage).toBe(2);
+    const state = { currentPage: 1, expences: { page0: [], page1: [] } };
+    setCurrentPage(state, 0);
+    expect(state.currentPage).toBe(0);
   });
 
   it("setCurrentPage does nothing when pageNumber < 0", () => {
     const state = { currentPage: 1 };
     setCurrentPage(state, -2);
+    expect(state.currentPage).toBe(1);
+  });
+
+  it("setCurrentPage does nothing when currentPage is the last page", () => {
+    const state = { currentPage: 1, expences: { page0: [], page1: [] } };
+    setCurrentPage(state, 2);
     expect(state.currentPage).toBe(1);
   });
 
