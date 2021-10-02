@@ -8,6 +8,11 @@ export const mutations = {
     state.dialogShown = true;
     return state;
   },
+
+  hideDialog: (state) => {
+    state.dialogShown = false;
+    return state;
+  },
 };
 
 export default new Vuex.Store({
