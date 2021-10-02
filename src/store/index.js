@@ -31,11 +31,18 @@ export const mutations = {
   },
 };
 
+export const getters = {
+  pageCount: (state) => {
+    return Object.keys(state.expences).length;
+  },
+};
+
 export default new Vuex.Store({
   state: {
     dialogShown: false,
-    itemsPerPage: 5,
     currentPage: 0,
+    expences: { page0: [] },
   },
   mutations,
+  getters,
 });

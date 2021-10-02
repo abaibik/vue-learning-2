@@ -1,6 +1,7 @@
-import { mutations } from "@/store";
+import { mutations, getters } from "@/store";
 const { showDialog, hideDialog, setCurrentPage, jumpPrevPage, jumpNextPage } =
   mutations;
+const { pageCount } = getters;
 
 describe("Store", () => {
   it("showDialog", () => {
@@ -43,5 +44,10 @@ describe("Store", () => {
     const state = { currentPage: 1 };
     jumpNextPage(state);
     expect(state.currentPage).toBe(2);
+  });
+
+  it("pageCount", () => {
+    const state = { expences: { page0: [], page1: [] } };
+    expect(pageCount(state)).toBe(2);
   });
 });
