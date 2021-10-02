@@ -1,6 +1,12 @@
 import { mutations, getters } from "@/store";
-const { showDialog, hideDialog, setCurrentPage, jumpPrevPage, jumpNextPage } =
-  mutations;
+const {
+  showDialog,
+  hideDialog,
+  setCurrentPage,
+  jumpPrevPage,
+  jumpNextPage,
+  addCost,
+} = mutations;
 const { pageCount } = getters;
 
 describe("Store", () => {
@@ -61,5 +67,57 @@ describe("Store", () => {
   it("pageCount", () => {
     const state = { expences: { page0: [], page1: [] } };
     expect(pageCount(state)).toBe(2);
+  });
+
+  it("addCost when no expences", () => {
+    const state = { expences: { page0: [] } };
+    const newCost = {
+      date: new Date("2021-09-03T00:00:00.000Z"),
+      category: "cats",
+      value: "40",
+    };
+    addCost(state, newCost);
+    expect(state.expences.page0).toStrictEqual([newCost]);
+  });
+
+  it("addCost to second page", () => {
+    const oldCost = {
+      date: new Date("2020-10-03T00:00:00.000Z"),
+      category: "dogs",
+      value: "1",
+    };
+    const state = {
+      expences: {
+        page0: [],
+        page1: [oldCost],
+      },
+    };
+    const newCost = {
+      date: new Date("2021-09-03T00:00:00.000Z"),
+      category: "cats",
+      value: "40",
+    };
+    addCost(state, newCost);
+    expect(state.expences.page1).toStrictEqual([oldCost, newCost]);
+  });
+
+  it("addCost creates a new page", () => {
+    const oldCost = {
+      date: new Date("2020-10-03T00:00:00.000Z"),
+      category: "dogs",
+      value: "1",
+    };
+    const state = {
+      expences: {
+        page0: [oldCost, oldCost, oldCost, oldCost, oldCost],
+      },
+    };
+    const newCost = {
+      date: new Date("2021-09-03T00:00:00.000Z"),
+      category: "cats",
+      value: "40",
+    };
+    addCost(state, newCost);
+    expect(state.expences.page1).toStrictEqual([newCost]);
   });
 });

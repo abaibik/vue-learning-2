@@ -31,6 +31,16 @@ export const mutations = {
       state.currentPage++;
     }
   },
+
+  addCost: (state, cost) => {
+    const lastPageNumber = getters.pageCount(state) - 1;
+    const lastPage = state.expences[`page${lastPageNumber}`];
+    if (lastPage.length < 5) {
+      lastPage.push(cost);
+    } else {
+      state.expences[`page${lastPageNumber + 1}`] = [cost];
+    }
+  },
 };
 
 export const getters = {
