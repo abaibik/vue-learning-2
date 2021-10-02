@@ -41,9 +41,15 @@ describe("Store", () => {
   });
 
   it("jumpNextPage", () => {
-    const state = { currentPage: 1 };
+    const state = { currentPage: 0, expences: { page0: [], page1: [] } };
     jumpNextPage(state);
-    expect(state.currentPage).toBe(2);
+    expect(state.currentPage).toBe(1);
+  });
+
+  it("jumpNextPage does nothing when currentPage is the last page", () => {
+    const state = { currentPage: 1, expences: { page0: [], page1: [] } };
+    jumpNextPage(state);
+    expect(state.currentPage).toBe(1);
   });
 
   it("pageCount", () => {

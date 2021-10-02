@@ -27,7 +27,9 @@ export const mutations = {
   },
 
   jumpNextPage: (state) => {
-    state.currentPage++;
+    if (state.currentPage < getters.pageCount(state) - 1) {
+      state.currentPage++;
+    }
   },
 };
 
