@@ -1,5 +1,6 @@
 import { mutations } from "@/store";
-const { showDialog, hideDialog, setCurrentPage, jumpPrevPage } = mutations;
+const { showDialog, hideDialog, setCurrentPage, jumpPrevPage, jumpNextPage } =
+  mutations;
 
 describe("Store", () => {
   it("showDialog", () => {
@@ -36,5 +37,11 @@ describe("Store", () => {
     const state = { currentPage: 0 };
     jumpPrevPage(state);
     expect(state.currentPage).toBe(0);
+  });
+
+  it("jumpNextPage", () => {
+    const state = { currentPage: 1 };
+    jumpNextPage(state);
+    expect(state.currentPage).toBe(2);
   });
 });

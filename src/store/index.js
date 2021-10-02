@@ -25,6 +25,10 @@ export const mutations = {
       state.currentPage--;
     }
   },
+
+  jumpNextPage: (state) => {
+    state.currentPage++;
+  },
 };
 
 export default new Vuex.Store({
