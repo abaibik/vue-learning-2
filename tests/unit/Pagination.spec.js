@@ -1,14 +1,25 @@
-import { shallowMount } from "@vue/test-utils";
+import Vuex from "vuex";
+import { shallowMount, createLocalVue } from "@vue/test-utils";
 import PaginationItem from "@/components/PaginationItem.vue";
 import Pagination from "@/components/Pagination.vue";
 
 describe("Pagination.vue", () => {
+  const localVue = createLocalVue();
+  localVue.use(Vuex);
+
   it("renders 2 pages", () => {
     const wrapper = shallowMount(Pagination, {
-      propsData: {
-        pageCount: 2,
-        currentPage: 1,
+      mocks: {
+        $store: {
+          state: {
+            currentPage: 1,
+          },
+          getters: {
+            pageCount: 2,
+          },
+        },
       },
+      localVue,
     });
     const paginationItems = wrapper.findAllComponents(PaginationItem);
     expect(paginationItems.length).toBe(2);
@@ -19,41 +30,75 @@ describe("Pagination.vue", () => {
     }
   });
 
-  it("previous/next page state", async () => {
+  it("previous/next page state when on last page", async () => {
     const wrapper = shallowMount(Pagination, {
-      propsData: {
-        pageCount: 2,
-        currentPage: 1,
+      mocks: {
+        $store: {
+          state: {
+            currentPage: 1,
+          },
+          getters: {
+            pageCount: 2,
+          },
+        },
       },
+      localVue,
     });
     const previousButton = wrapper.find(".previous-button");
     const nextButton = wrapper.find(".next-button");
     expect(previousButton.classes()).not.toContain("disabled");
     expect(nextButton.classes()).toContain("disabled");
+  });
 
-    await wrapper.setProps({ currentPage: 0, pageCount: 2 });
+  it("previous/next page state when on first page", async () => {
+    const wrapper = shallowMount(Pagination, {
+      mocks: {
+        $store: {
+          state: {
+            currentPage: 0,
+          },
+          getters: {
+            pageCount: 2,
+          },
+        },
+      },
+      localVue,
+    });
+    const previousButton = wrapper.find(".previous-button");
+    const nextButton = wrapper.find(".next-button");
     expect(previousButton.classes()).toContain("disabled");
     expect(nextButton.classes()).not.toContain("disabled");
   });
 
   it("emits currentPageChange", () => {
+    const mockCommit = jest.fn();
     const wrapper = shallowMount(Pagination, {
-      propsData: {
-        pageCount: 3,
-        currentPage: 1,
+      mocks: {
+        $store: {
+          state: {
+            currentPage: 1,
+          },
+          getters: {
+            pageCount: 3,
+          },
+          commit: mockCommit,
+        },
       },
+      localVue,
     });
-    const previousButton = wrapper.find(".previous-button > a");
-    const nextButton = wrapper.find(".next-button > a");
-    const paginationItem = wrapper.findComponent(PaginationItem);
 
+    const previousButton = wrapper.find(".previous-button > a");
     previousButton.trigger("click");
+    expect(mockCommit).toBeCalledWith("jumpPrevPage");
+    mockCommit.mockClear();
+
+    const nextButton = wrapper.find(".next-button > a");
     nextButton.trigger("click");
+    expect(mockCommit).toBeCalledWith("jumpNextPage");
+    mockCommit.mockClear();
+
+    const paginationItem = wrapper.findComponent(PaginationItem);
     paginationItem.vm.$emit("choose");
-    expect(wrapper.emitted().currentPageChange).toBeTruthy();
-    expect(wrapper.emitted().currentPageChange.length).toBe(3);
-    expect(wrapper.emitted().currentPageChange[0]).toEqual([0]);
-    expect(wrapper.emitted().currentPageChange[1]).toEqual([2]);
-    expect(wrapper.emitted().currentPageChange[2]).toEqual([0]);
+    expect(mockCommit).toBeCalledWith("setCurrentPage", 0);
   });
 });

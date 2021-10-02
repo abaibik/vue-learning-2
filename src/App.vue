@@ -9,19 +9,9 @@
       Add new cost
     </button>
     <AddDialog v-model="dialogShown" @addCost="itemsStorage.add($event)" />
-    <Pagination
-      :pageCount="pageCount"
-      :currentPage="currentPage"
-      @currentPageChange="currentPage = $event"
-      v-if="pageCount >= 2"
-    />
+    <Pagination v-if="pageCount >= 2" />
     <ExpenceList :items="pageItems" />
-    <Pagination
-      :pageCount="pageCount"
-      :currentPage="currentPage"
-      @currentPageChange="currentPage = $event"
-      v-if="pageCount >= 2"
-    />
+    <Pagination v-if="pageCount >= 2" />
   </div>
 </template>
 

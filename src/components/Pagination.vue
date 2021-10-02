@@ -3,7 +3,7 @@
     <ul class="pagination">
       <li :class="previousClassName">
         <a
-          @click="$emit('currentPageChange', currentPage - 1)"
+          @click="$store.commit('jumpPrevPage')"
           class="page-link"
           href="#"
           aria-label="Previous"
@@ -18,12 +18,12 @@
         :key="pageNumber"
         :pageNumber="pageNumber"
         :pageActive="pageNumber === currentPage + 1"
-        @choose="$emit('currentPageChange', pageNumber - 1)"
+        @choose="$store.commit('setCurrentPage', pageNumber - 1)"
       />
 
       <li :class="nextClassName">
         <a
-          @click="$emit('currentPageChange', currentPage + 1)"
+          @click="$store.commit('jumpNextPage')"
           class="page-link"
           href="#"
           aria-label="Next"
@@ -41,18 +41,22 @@ import PaginationItem from "./PaginationItem.vue";
 export default {
   components: { PaginationItem },
   name: "Pagination",
-  props: {
-    pageCount: Number,
-    currentPage: Number,
-  },
-  emits: ["currentPageChange"],
   computed: {
+    pageCount: function () {
+      return this.$store.getters.pageCount;
+    },
+
+    currentPage: function () {
+      return this.$store.state.currentPage;
+    },
+
     previousClassName: function () {
       if (this.currentPage === 0) {
         return "previous-button page-item disabled";
       }
       return "previous-button page-item";
     },
+
     nextClassName: function () {
       if (this.currentPage === this.pageCount - 1) {
         return "next-button page-item disabled";
