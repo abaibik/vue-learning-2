@@ -1,5 +1,5 @@
 import { mutations } from "@/store";
-const { showDialog, hideDialog } = mutations;
+const { showDialog, hideDialog, setCurrentPage } = mutations;
 
 describe("Store", () => {
   it("showDialog", () => {
@@ -12,5 +12,17 @@ describe("Store", () => {
     const state = { dialogShown: true };
     hideDialog(state);
     expect(state.dialogShown).toBe(false);
+  });
+
+  it("setCurrentPage", () => {
+    const state = { currentPage: 1 };
+    setCurrentPage(state, 2);
+    expect(state.currentPage).toBe(2);
+  });
+
+  it("setCurrentPage does nothing when pageNumber < 0", () => {
+    const state = { currentPage: 1 };
+    setCurrentPage(state, -2);
+    expect(state.currentPage).toBe(1);
   });
 });

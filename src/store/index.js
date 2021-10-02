@@ -13,6 +13,14 @@ export const mutations = {
     state.dialogShown = false;
     return state;
   },
+
+  setCurrentPage: (state, pageNumber) => {
+    if (pageNumber < 0) {
+      return state;
+    }
+    state.currentPage = pageNumber;
+    return state;
+  },
 };
 
 export default new Vuex.Store({
