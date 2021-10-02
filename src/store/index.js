@@ -11,15 +11,19 @@ export const mutations = {
 
   hideDialog: (state) => {
     state.dialogShown = false;
-    return state;
   },
 
   setCurrentPage: (state, pageNumber) => {
     if (pageNumber < 0) {
-      return state;
+      return;
     }
     state.currentPage = pageNumber;
-    return state;
+  },
+
+  jumpPrevPage: (state) => {
+    if (state.currentPage > 0) {
+      state.currentPage--;
+    }
   },
 };
 

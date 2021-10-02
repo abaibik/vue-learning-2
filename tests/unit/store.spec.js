@@ -1,5 +1,5 @@
 import { mutations } from "@/store";
-const { showDialog, hideDialog, setCurrentPage } = mutations;
+const { showDialog, hideDialog, setCurrentPage, jumpPrevPage } = mutations;
 
 describe("Store", () => {
   it("showDialog", () => {
@@ -24,5 +24,17 @@ describe("Store", () => {
     const state = { currentPage: 1 };
     setCurrentPage(state, -2);
     expect(state.currentPage).toBe(1);
+  });
+
+  it("jumpPrevPage", () => {
+    const state = { currentPage: 2 };
+    jumpPrevPage(state);
+    expect(state.currentPage).toBe(1);
+  });
+
+  it("jumpPrevPage does nothing when currentPage = 0", () => {
+    const state = { currentPage: 0 };
+    jumpPrevPage(state);
+    expect(state.currentPage).toBe(0);
   });
 });
