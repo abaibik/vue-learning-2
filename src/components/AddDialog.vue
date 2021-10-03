@@ -59,7 +59,7 @@
             class="btn btn-primary"
             data-bs-dismiss="modal"
             id="buttonAdd"
-            @click="$emit('addCost', makeCost())"
+            @click="$store.commit('addCost', makeCost())"
           >
             Add
           </button>
@@ -71,17 +71,11 @@
 
 <script>
 import { Modal } from "bootstrap";
+import { mapState } from "vuex";
 
 export default {
   name: "AddDialog",
-  props: {
-    visible: Boolean,
-  },
-  emits: ["addCost"],
-  model: {
-    prop: "visible",
-    event: "visibleChange",
-  },
+  computed: mapState({ visible: "dialogShown" }),
   watch: {
     visible: function (newValue) {
       const myModal = new Modal(this.$refs.dialogRef);
@@ -111,10 +105,10 @@ export default {
   },
   mounted() {
     this.$refs.dialogRef.addEventListener("shown.bs.modal", () => {
-      this.$emit("visibleChange", true);
+      this.$store.commit("showDialog");
     });
     this.$refs.dialogRef.addEventListener("hidden.bs.modal", () => {
-      this.$emit("visibleChange", false);
+      this.$store.commit("hideDialog");
       this.clearForm();
     });
   },

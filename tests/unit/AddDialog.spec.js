@@ -1,21 +1,23 @@
-import { shallowMount } from "@vue/test-utils";
+import Vuex from "vuex";
+import { shallowMount, createLocalVue } from "@vue/test-utils";
 import AddDialog from "@/components/AddDialog.vue";
 
 describe("AddDialog.vue", () => {
-  it("dialog shown when prop set", async () => {
-    const wrapper = shallowMount(AddDialog, {
-      propsData: {
-        visible: false,
-      },
-    });
-    const mockCallback = jest.fn();
-    wrapper.vm.$refs.dialogRef.addEventListener("show.bs.modal", mockCallback);
-    await wrapper.setProps({ visible: true });
-    expect(mockCallback.mock.calls.length).toBe(1);
-  });
+  const localVue = createLocalVue();
+  localVue.use(Vuex);
+  const $store = {
+    state: {
+      dialogShown: false,
+    },
+  };
 
   it("makeCost returns values from inputs", () => {
-    const wrapper = shallowMount(AddDialog);
+    const wrapper = shallowMount(AddDialog, {
+      mocks: {
+        $store,
+      },
+      localVue,
+    });
     wrapper.vm.$refs.categoryRef.value = "cats";
     wrapper.vm.$refs.amountRef.value = "40";
     wrapper.vm.$refs.dateRef.value = "2017-06-01";
@@ -27,31 +29,38 @@ describe("AddDialog.vue", () => {
   });
 
   it("makeCost returns values from inputs", async () => {
-    const wrapper = shallowMount(AddDialog);
-    wrapper.vm.makeCost = jest.fn(() => {
-      return {
-        date: new Date("2017-06-01"),
-        category: "cats",
-        value: "40",
-      };
+    const mockCommit = jest.fn();
+    const wrapper = shallowMount(AddDialog, {
+      mocks: {
+        $store: {
+          state: {
+            dialogShown: false,
+          },
+          commit: mockCommit,
+        },
+      },
+      localVue,
     });
+    const cost = {
+      date: new Date("2017-06-01"),
+      category: "cats",
+      value: "40",
+    };
+    wrapper.vm.makeCost = jest.fn(() => cost);
+
     const button = wrapper.find("#buttonAdd");
     await button.trigger("click");
-    await wrapper.vm.$nextTick();
     expect(wrapper.vm.makeCost).toBeCalled();
-    expect(wrapper.emitted().addCost).toBeTruthy();
-    expect(wrapper.emitted().addCost.length).toBe(1);
-    expect(wrapper.emitted().addCost[0]).toEqual([
-      {
-        date: new Date("2017-06-01"),
-        category: "cats",
-        value: "40",
-      },
-    ]);
+    expect(mockCommit).toHaveBeenCalledWith("addCost", cost);
   });
 
   it("clearForm clear inputs", () => {
-    const wrapper = shallowMount(AddDialog);
+    const wrapper = shallowMount(AddDialog, {
+      mocks: {
+        $store,
+      },
+      localVue,
+    });
     wrapper.vm.$refs.categoryRef.value = "cats";
     wrapper.vm.$refs.amountRef.value = "40";
     wrapper.vm.$refs.dateRef.value = "2017-06-01";
