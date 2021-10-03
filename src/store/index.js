@@ -38,7 +38,8 @@ export const mutations = {
     if (lastPage.length < 5) {
       lastPage.push(cost);
     } else {
-      state.expences[`page${lastPageNumber + 1}`] = [cost];
+      // https://vuejs.org/v2/guide/reactivity.html#For-Objects
+      Vue.set(state.expences, `page${lastPageNumber + 1}`, [cost]);
     }
   },
 };
@@ -52,6 +53,25 @@ export const getters = {
   },
 };
 
+export const actions = {
+  async fetchData(context) {
+    const response = await fetch(
+      "https://gist.githubusercontent.com/abaibik/ee8f5f9e6819f41899359f7a4a1f4c6e/raw/49bd90890c95e44a179ce89a96db84710dfd02fd/expences.json"
+    );
+    const json = await response.json();
+    for (const page in json) {
+      for (const cost of json[page]) {
+        const item = {
+          category: cost.category,
+          value: cost.value,
+          date: new Date(cost.date),
+        };
+        context.commit("addCost", item);
+      }
+    }
+  },
+};
+
 export default new Vuex.Store({
   state: {
     dialogShown: false,
@@ -60,4 +80,5 @@ export default new Vuex.Store({
   },
   mutations,
   getters,
+  actions,
 });

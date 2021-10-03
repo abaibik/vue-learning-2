@@ -1,4 +1,4 @@
-import { mutations, getters } from "@/store";
+import { mutations, getters, actions } from "@/store";
 const {
   showDialog,
   hideDialog,
@@ -8,6 +8,7 @@ const {
   addCost,
 } = mutations;
 const { pageCount, currentPageItems } = getters;
+const { fetchData } = actions;
 
 describe("Store", () => {
   it("showDialog", () => {
@@ -135,5 +136,38 @@ describe("Store", () => {
       },
     };
     expect(currentPageItems(state)).toStrictEqual([oldCost]);
+  });
+
+  it("fetchData", async () => {
+    const context = {
+      commit: jest.fn(),
+    };
+
+    const cost1 = {
+      date: new Date("2020-10-03T00:00:00.000Z"),
+      category: "dogs",
+      value: "1",
+    };
+    const cost2 = {
+      date: new Date("2020-10-03T00:00:00.000Z"),
+      category: "cats",
+      value: "40",
+    };
+
+    global.fetch = jest.fn(async () => {
+      return {
+        json: async () => {
+          return { page1: [cost1], page2: [cost2] };
+        },
+      };
+    });
+
+    await fetchData(context);
+    expect(global.fetch).toHaveBeenCalled();
+    expect(context.commit).toHaveBeenCalledTimes(2);
+    expect(context.commit.mock.calls[0]).toEqual(["addCost", cost1]);
+    expect(context.commit.mock.calls[1]).toEqual(["addCost", cost2]);
+
+    delete global.fetch;
   });
 });

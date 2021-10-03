@@ -9,13 +9,14 @@
       Add new cost
     </button>
     <AddDialog />
-    <Pagination v-if="pageCount >= 2" />
+    <Pagination v-if="$store.getters.pageCount >= 2" />
     <ExpenceList :items="currentPageItems" />
     <Pagination v-if="pageCount >= 2" />
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import AddDialog from "./components/AddDialog.vue";
 import ExpenceList from "./components/ExpenceList.vue";
 import Pagination from "./components/Pagination.vue";
@@ -23,13 +24,9 @@ import Pagination from "./components/Pagination.vue";
 export default {
   name: "App",
   components: { ExpenceList, AddDialog, Pagination },
-  computed: {
-    currentPageItems: function () {
-      return this.$store.getters.currentPageItems;
-    },
-    pageCount: function () {
-      return this.$store.getters.pageCount;
-    },
+  computed: mapGetters(["currentPageItems", "pageCount"]),
+  mounted() {
+    this.$store.dispatch("fetchData");
   },
 };
 </script>

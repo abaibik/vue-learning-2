@@ -7,6 +7,13 @@ describe("App.vue", () => {
   const localVue = createLocalVue();
   localVue.use(Vuex);
 
+  const mockDispatch = jest.fn();
+  const mockCommit = jest.fn();
+  beforeEach(() => {
+    mockDispatch.mockClear();
+    mockCommit.mockClear();
+  });
+
   it("renders single item", async () => {
     const item = { date: new Date(), category: "cats", value: 40 };
 
@@ -17,16 +24,17 @@ describe("App.vue", () => {
             pageCount: 1,
             currentPageItems: [item],
           },
+          dispatch: mockDispatch,
         },
       },
       localVue,
     });
     const list = wrapper.findComponent(ExpenceList);
     expect(list.props().items).toStrictEqual([item]);
+    expect(mockDispatch).toHaveBeenCalledWith("fetchData");
   });
 
   it("dialog shown when button clicked", async () => {
-    const mockCommit = jest.fn();
     const wrapper = shallowMount(App, {
       mocks: {
         $store: {
@@ -35,6 +43,7 @@ describe("App.vue", () => {
             currentPageItems: [],
           },
           commit: mockCommit,
+          dispatch: mockDispatch,
         },
       },
       localVue,
