@@ -7,7 +7,7 @@ const {
   jumpNextPage,
   addCost,
 } = mutations;
-const { pageCount } = getters;
+const { pageCount, currentPageItems } = getters;
 
 describe("Store", () => {
   it("showDialog", () => {
@@ -119,5 +119,21 @@ describe("Store", () => {
     };
     addCost(state, newCost);
     expect(state.expences.page1).toStrictEqual([newCost]);
+  });
+
+  it("currentPageItems", () => {
+    const oldCost = {
+      date: new Date("2020-10-03T00:00:00.000Z"),
+      category: "dogs",
+      value: "1",
+    };
+    const state = {
+      currentPage: 1,
+      expences: {
+        page0: [],
+        page1: [oldCost],
+      },
+    };
+    expect(currentPageItems(state)).toStrictEqual([oldCost]);
   });
 });

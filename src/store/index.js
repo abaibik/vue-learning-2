@@ -44,6 +44,9 @@ export const mutations = {
 };
 
 export const getters = {
+  currentPageItems: (state) => {
+    return state.expences[`page${state.currentPage}`];
+  },
   pageCount: (state) => {
     return Object.keys(state.expences).length;
   },
