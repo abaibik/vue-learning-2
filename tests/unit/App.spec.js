@@ -1,52 +1,46 @@
-import { shallowMount } from "@vue/test-utils";
+import Vuex from "vuex";
+import { shallowMount, createLocalVue } from "@vue/test-utils";
 import ExpenceList from "@/components/ExpenceList.vue";
-import ExpenceStorage from "@/expence-storage.js";
-import AddDialog from "@/components/AddDialog.vue";
 import App from "@/App.vue";
 
-jest.mock("@/expence-storage.js");
-
 describe("App.vue", () => {
-  beforeEach(() => {
-    ExpenceStorage.mockClear();
-  });
+  const localVue = createLocalVue();
+  localVue.use(Vuex);
 
-  it("renders ExpenceList with items", async () => {
+  it("renders single item", async () => {
     const item = { date: new Date(), category: "cats", value: 40 };
-    ExpenceStorage.mockImplementation(() => {
-      return {
-        getExpences: () => {
-          return [item];
+
+    const wrapper = shallowMount(App, {
+      mocks: {
+        $store: {
+          getters: {
+            pageCount: 1,
+            currentPageItems: [item],
+          },
         },
-      };
+      },
+      localVue,
     });
-    const wrapper = shallowMount(App);
     const list = wrapper.findComponent(ExpenceList);
     expect(list.props().items).toStrictEqual([item]);
   });
 
   it("dialog shown when button clicked", async () => {
-    const wrapper = shallowMount(App);
+    const mockCommit = jest.fn();
+    const wrapper = shallowMount(App, {
+      mocks: {
+        $store: {
+          getters: {
+            pageCount: 1,
+            currentPageItems: [],
+          },
+          commit: mockCommit,
+        },
+      },
+      localVue,
+    });
     const btn = wrapper.find("button");
     await btn.trigger("click");
-    await wrapper.vm.$nextTick();
-    expect(wrapper.vm.dialogShown).toBeTruthy();
-  });
-
-  it("storage.add called when event", async () => {
-    const item = { date: new Date(), category: "cats", value: 40 };
-    const addMock = jest.fn();
-    ExpenceStorage.mockImplementation(() => {
-      return {
-        getExpences: () => {
-          return [item];
-        },
-        add: addMock,
-      };
-    });
-    const wrapper = shallowMount(App);
-    const dialog = wrapper.findComponent(AddDialog);
-    dialog.vm.$emit("addCost", item);
-    expect(addMock).toHaveBeenCalledWith(item);
+    expect(mockCommit).toHaveBeenCalledWith("showDialog");
   });
 });

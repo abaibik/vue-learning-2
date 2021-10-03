@@ -4,13 +4,13 @@
     <button
       type="button"
       class="btn btn-outline-secondary mb-5"
-      @click="dialogShown = true"
+      @click="$store.commit('showDialog')"
     >
       Add new cost
     </button>
-    <AddDialog v-model="dialogShown" @addCost="itemsStorage.add($event)" />
+    <AddDialog />
     <Pagination v-if="pageCount >= 2" />
-    <ExpenceList :items="pageItems" />
+    <ExpenceList :items="currentPageItems" />
     <Pagination v-if="pageCount >= 2" />
   </div>
 </template>
@@ -19,30 +19,16 @@
 import AddDialog from "./components/AddDialog.vue";
 import ExpenceList from "./components/ExpenceList.vue";
 import Pagination from "./components/Pagination.vue";
-import ExpenceStorage from "./expence-storage.js";
 
 export default {
   name: "App",
   components: { ExpenceList, AddDialog, Pagination },
-  data: function () {
-    return {
-      itemsStorage: new ExpenceStorage(localStorage),
-      dialogShown: false,
-      itemsPerPage: 5,
-      currentPage: 0,
-    };
-  },
   computed: {
-    pageItems: function () {
-      const startNum = this.currentPage * this.itemsPerPage;
-      const lastNum = startNum + this.itemsPerPage;
-      return this.itemsStorage.getExpences().slice(startNum, lastNum);
+    currentPageItems: function () {
+      return this.$store.getters.currentPageItems;
     },
-
     pageCount: function () {
-      return Math.ceil(
-        this.itemsStorage.getExpences().length / this.itemsPerPage
-      );
+      return this.$store.getters.pageCount;
     },
   },
 };
