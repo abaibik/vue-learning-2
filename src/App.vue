@@ -1,28 +1,32 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div class="container">
+    <h1 class="mb-5"><ins>Expence list</ins></h1>
+    <button
+      type="button"
+      class="btn btn-outline-secondary mb-5"
+      @click="$store.commit('showDialog')"
+    >
+      Add new cost
+    </button>
+    <AddDialog />
+    <Pagination v-if="$store.getters.pageCount >= 2" />
+    <ExpenceList :items="currentPageItems" />
+    <Pagination v-if="pageCount >= 2" />
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import { mapGetters } from "vuex";
+import AddDialog from "./components/AddDialog.vue";
+import ExpenceList from "./components/ExpenceList.vue";
+import Pagination from "./components/Pagination.vue";
 
 export default {
   name: "App",
-  components: {
-    HelloWorld,
+  components: { ExpenceList, AddDialog, Pagination },
+  computed: mapGetters(["currentPageItems", "pageCount"]),
+  mounted() {
+    this.$store.dispatch("fetchData");
   },
 };
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
