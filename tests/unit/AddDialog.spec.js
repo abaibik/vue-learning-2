@@ -69,4 +69,21 @@ describe("AddDialog.vue", () => {
     expect(wrapper.vm.$refs.amountRef.value).toBe("");
     expect(wrapper.vm.$refs.dateRef.value).toBe("");
   });
+
+  it("categories", () => {
+    const wrapper = shallowMount(AddDialog, {
+      mocks: {
+        $store: {
+          state: {
+            expences: {
+              page0: [{ category: "cats" }, { category: "dogs" }],
+              page1: [{ category: "cats" }, { category: "snakes" }],
+            },
+          },
+        },
+      },
+      localVue,
+    });
+    expect(wrapper.vm.categories).toEqual(new Set(["cats", "dogs", "snakes"]));
+  });
 });

@@ -22,7 +22,16 @@
                 class="form-control"
                 id="paymentCategory"
                 ref="categoryRef"
+                list="category"
               />
+
+              <datalist id="category">
+                <option
+                  v-for="category in categories"
+                  :key="category"
+                  :value="category"
+                ></option>
+              </datalist>
             </div>
             <div class="mb-3">
               <label for="paymentAmount" class="form-label"
@@ -75,7 +84,18 @@ import { mapState } from "vuex";
 
 export default {
   name: "AddDialog",
-  computed: mapState({ visible: "dialogShown" }),
+  computed: {
+    ...mapState({ visible: "dialogShown" }),
+    categories() {
+      const result = new Set();
+      for (const page in this.$store.state.expences) {
+        for (const cost of this.$store.state.expences[page]) {
+          result.add(cost.category);
+        }
+      }
+      return result;
+    },
+  },
   watch: {
     visible: function (newValue) {
       const myModal = new Modal(this.$refs.dialogRef);
