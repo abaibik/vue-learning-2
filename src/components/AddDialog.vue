@@ -108,6 +108,11 @@ export default {
         myModal.hide();
       }
     },
+    routePath: function (newValue) {
+      if (newValue.startsWith("/add")) {
+        this.showAndFill();
+      }
+    },
   },
   methods: {
     makeCost: function () {
@@ -134,6 +139,10 @@ export default {
       const day = `${today.getDate()}`.padStart(2, "0");
       this.$refs.dateRef.value = `${today.getFullYear()}-${month}-${day}`;
     },
+    showAndFill: function () {
+      this.$store.commit("showDialog");
+      this.fillForm();
+    },
   },
   mounted() {
     this.$refs.dialogRef.addEventListener("shown.bs.modal", () => {
@@ -144,8 +153,7 @@ export default {
       this.clearForm();
     });
     if (this.$route.path.startsWith("/add")) {
-      this.$store.commit("showDialog");
-      this.fillForm();
+      this.showAndFill();
     }
   },
 };

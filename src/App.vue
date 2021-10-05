@@ -9,7 +9,15 @@
       Add new cost
     </button>
     <AddDialog />
-    <a href="/add/payment/Transport?value=50">Add regular payment</a>
+    <router-link
+      :to="{
+        name: 'Add',
+        params: { category: 'Transport' },
+        query: { value: 456 },
+      }"
+      >Add regular payment</router-link
+    >
+
     <Pagination v-if="$store.getters.pageCount >= 2" />
     <ExpenceList :items="currentPageItems" />
     <Pagination v-if="pageCount >= 2" />
