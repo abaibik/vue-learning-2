@@ -1,6 +1,7 @@
 import Vuex from "vuex";
 import { shallowMount, createLocalVue } from "@vue/test-utils";
 import AddDialog from "@/components/AddDialog.vue";
+import FakeTimers from "@sinonjs/fake-timers";
 
 describe("AddDialog.vue", () => {
   const localVue = createLocalVue();
@@ -10,11 +11,15 @@ describe("AddDialog.vue", () => {
       dialogShown: false,
     },
   };
+  const $route = {
+    path: "/",
+  };
 
   it("makeCost returns values from inputs", () => {
     const wrapper = shallowMount(AddDialog, {
       mocks: {
         $store,
+        $route,
       },
       localVue,
     });
@@ -33,11 +38,10 @@ describe("AddDialog.vue", () => {
     const wrapper = shallowMount(AddDialog, {
       mocks: {
         $store: {
-          state: {
-            dialogShown: false,
-          },
+          ...$store,
           commit: mockCommit,
         },
+        $route,
       },
       localVue,
     });
@@ -58,6 +62,7 @@ describe("AddDialog.vue", () => {
     const wrapper = shallowMount(AddDialog, {
       mocks: {
         $store,
+        $route,
       },
       localVue,
     });
@@ -81,9 +86,44 @@ describe("AddDialog.vue", () => {
             },
           },
         },
+        $route,
       },
       localVue,
     });
     expect(wrapper.vm.categories).toEqual(new Set(["cats", "dogs", "snakes"]));
+  });
+
+  describe("prefill", () => {
+    let clock;
+    beforeAll(() => {
+      clock = FakeTimers.install();
+    });
+
+    afterAll(() => {
+      clock.uninstall();
+    });
+
+    it("show dialog and prefill data when/add in path", () => {
+      const mockCommit = jest.fn();
+      clock.setSystemTime(1349852318268);
+      const wrapper = shallowMount(AddDialog, {
+        mocks: {
+          $store: {
+            ...$store,
+            commit: mockCommit,
+          },
+          $route: {
+            path: "/add",
+            params: { category: "cats" },
+            query: { value: 1 },
+          },
+        },
+        localVue,
+      });
+      expect(mockCommit).toHaveBeenCalledWith("showDialog");
+      expect(wrapper.vm.$refs.categoryRef.value).toBe("cats");
+      expect(wrapper.vm.$refs.amountRef.value).toBe("1");
+      expect(wrapper.vm.$refs.dateRef.value).toBe("2012-09-10");
+    });
   });
 });

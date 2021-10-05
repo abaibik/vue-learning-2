@@ -95,6 +95,9 @@ export default {
       }
       return result;
     },
+    routePath() {
+      return this.$route.path;
+    },
   },
   watch: {
     visible: function (newValue) {
@@ -122,6 +125,15 @@ export default {
       this.$refs.amountRef.value = "";
       this.$refs.dateRef.value = "";
     },
+    fillForm: function () {
+      this.$refs.categoryRef.value = this.$route.params.category;
+      this.$refs.amountRef.value = this.$route.query.value;
+
+      const today = new Date();
+      const month = `${today.getMonth()}`.padStart(2, "0");
+      const day = `${today.getDate()}`.padStart(2, "0");
+      this.$refs.dateRef.value = `${today.getFullYear()}-${month}-${day}`;
+    },
   },
   mounted() {
     this.$refs.dialogRef.addEventListener("shown.bs.modal", () => {
@@ -131,6 +143,10 @@ export default {
       this.$store.commit("hideDialog");
       this.clearForm();
     });
+    if (this.$route.path.startsWith("/add")) {
+      this.$store.commit("showDialog");
+      this.fillForm();
+    }
   },
 };
 </script>

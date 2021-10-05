@@ -12,7 +12,7 @@ const routes = [
   },
 
   {
-    path: "/add/payment/:category?value=:value",
+    path: "/add/payment/:category",
     name: "Add",
     component: App,
   },
