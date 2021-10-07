@@ -46,4 +46,21 @@ describe("ExpenceListRow.vue", () => {
       expect(tdDate.at(0).text()).toBe("17.12.1995");
     }
   });
+
+  it("emits contextMenu on right click", async () => {
+    const item = {
+      date: new Date("1995-12-17T03:24:00"),
+      category: "cats",
+      value: 40,
+    };
+    const wrapper = shallowMount(ExpenceListRow, {
+      propsData: { item: item, index: 2 },
+    });
+
+    await wrapper.trigger("contextmenu");
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.emitted().contextMenu).toBeTruthy();
+    expect(wrapper.emitted().contextMenu.length).toBe(1);
+  });
 });

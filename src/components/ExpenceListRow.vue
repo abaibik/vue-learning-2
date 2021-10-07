@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr @contextmenu.stop.prevent="contextMenuHandler()">
     <th scope="row">{{ index }}</th>
     <td class="row-date">
       {{ item.date.toLocaleDateString(language) }}
@@ -20,6 +20,12 @@ export default {
   props: {
     item: Object,
     index: Number,
+  },
+  emits: ["contextMenu"],
+  methods: {
+    contextMenuHandler() {
+      this.$emit("contextMenu");
+    },
   },
 };
 </script>
