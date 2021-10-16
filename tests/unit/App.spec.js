@@ -2,10 +2,12 @@ import Vuex from "vuex";
 import { shallowMount, createLocalVue } from "@vue/test-utils";
 import ExpenceList from "@/components/ExpenceList.vue";
 import App from "@/App.vue";
+import VueRouter from "vue-router";
 
 describe("App.vue", () => {
   const localVue = createLocalVue();
   localVue.use(Vuex);
+  localVue.use(VueRouter);
 
   const mockDispatch = jest.fn();
   const mockCommit = jest.fn();
