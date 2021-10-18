@@ -1,32 +1,40 @@
 <template>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Date</th>
-        <th scope="col">Category</th>
-        <th scope="col">Value</th>
-      </tr>
-    </thead>
-    <tbody>
-      <ExpenceListRow
-        v-for="idx in items.length"
-        :key="idx"
-        :index="idx"
-        :item="items[idx - 1]"
-      />
-    </tbody>
-  </table>
+  <BTable striped hover :items="items" :fields="fields">
+    <template #cell(index)="data">
+      {{ getItemIndex(data) }}
+    </template>
+    <template #cell(date)="data">
+      {{ getItemDate(data) }}
+    </template>
+  </BTable>
 </template>
 
 <script>
-import ExpenceListRow from "./ExpenceListRow.vue";
+import { BTable } from "bootstrap-vue";
 
 export default {
   name: "ExpenceList",
-  components: { ExpenceListRow },
+  components: { BTable },
   props: {
     items: Array,
+  },
+  methods: {
+    getItemIndex(data) {
+      return this.$store.state.currentPage * 5 + data.index + 1;
+    },
+    getItemDate(data) {
+      return data.item.date.toLocaleDateString(window.navigator.language);
+    },
+  },
+  data() {
+    return {
+      fields: [
+        { key: "index", label: "#" },
+        { key: "date", label: "Date" },
+        { key: "category", label: "Category" },
+        { key: "value", label: "Value" },
+      ],
+    };
   },
 };
 </script>
